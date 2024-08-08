@@ -1,8 +1,11 @@
-bank_balance = 0  # saldo bancário
-limit = 500
-bank_statement = ""  # extrato bancário
-num_withdraws = 0
-deposit = 0
+from datetime import date
+from person import Person
+from bank_account import Account
+
+pessoa1 = Person("70984106519","Giovanni", "Rua Carlos Rios, 104", "Recife", "PE", "M", "09-01-1999")
+santander = Account("70984106519")
+
+
 
 menu = ("""
 [0] Deposit
@@ -15,31 +18,20 @@ menu = ("""
 while True:
     options = input(menu)
     if options == "0":
-        deposit = float(input("Put a value to deposit in your account: "))
-        if deposit > 0:
-            bank_balance += deposit
-            bank_statement += f"Deposit: R$ {deposit:.2f} \n"
-        else:
-            print("Your value is invalid. Try again.")
+        deposits = float(input("Put a value to deposit in your account: "))
+        result = santander.deposit(deposits)
+        if result:  # Exibe mensagem de erro se houver
+            print(result)
+        
     elif options == "1":
         withdraws = float(input("Put a value to withdraw: "))
-        if withdraws <= 0:
-            print("Your value is invalid. Try again.")
-        elif withdraws > limit:
-            print("Your value is too high to withdraw.")
-        elif num_withdraws >= 3:
-            print("Operation failed, you made 3 withdrawals per day.")
-        elif bank_balance <= 0:
-            print("Your bank balance does not have money to withdraw.")
-        elif bank_balance < withdraws:
-            print("Your withdrawal value is too high.")
-        else:
-            num_withdraws += 1
-            bank_balance -= withdraws
-            bank_statement += f"Withdraw: R$ {withdraws:.2f} \n"
+        result = santander.withdrawals(withdraws)
+        if result:  # Exibe mensagem de erro se houver
+            print(result)
+        
     elif options == "2":
-        print(f"Your bank balance is R$ {bank_balance:.2f}")
-        print(bank_statement if bank_statement else "No transactions made.")
+        print(santander.get_statement())
+        
     elif options == "3":
         print("Program finished")
         break
